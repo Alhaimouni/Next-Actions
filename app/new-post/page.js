@@ -1,8 +1,22 @@
+import { storePost } from "@/lib/posts";
+
 export default function NewPostPage() {
+
+  async function formSubmit(formData) {
+    'use server'
+    console.log(formData.get("title"));
+    await storePost({
+      title: formData.get("title"),
+      content: formData.get("content"),
+      userId: 1,
+      imageUrl: 'fake',
+    });
+  }
+
   return (
     <>
       <h1>Create a new post</h1>
-      <form action={createPost}>
+      <form action={formSubmit}>
         <p className="form-control">
           <label htmlFor="title">Title</label>
           <input type="text" id="title" name="title" />
