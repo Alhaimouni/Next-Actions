@@ -1,16 +1,22 @@
+import FormSubmit from "@/components/form-submit";
 import { storePost } from "@/lib/posts";
+import { redirect } from "next/navigation";
 
 export default function NewPostPage() {
 
   async function formSubmit(formData) {
     'use server'
-    console.log(formData.get("title"));
+    // store post in database is async operation
+    // so we need to await it
     await storePost({
       title: formData.get("title"),
       content: formData.get("content"),
+      imageUrl: "https://placehold.co/600x400",
       userId: 1,
-      imageUrl: 'fake',
     });
+
+    //add redirect to home page
+    redirect("/feed");
   }
 
   return (
@@ -35,10 +41,12 @@ export default function NewPostPage() {
           <textarea id="content" name="content" rows="5" />
         </p>
         <p className="form-actions">
-          <button type="reset">Reset</button>
-          <button>Create Post</button>
+          {/* this component should be used inside form element because it uses useFormState hook */}
+          <FormSubmit formSubmit={formSubmit} />
         </p>
       </form>
     </>
   );
 }
+
+
